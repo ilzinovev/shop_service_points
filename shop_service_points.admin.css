@@ -1,0 +1,14 @@
+.service_points_table {}
+.service_points_table thead tr td { background: #ccc; }
+.service_points_table tr.even td { background: #ccffcc; }
+.service_points_table tr.odd td { background: #ffcc99; }
+
+.download_block{
+  border: 1px solid;
+  width: 50%;
+  padding: 10px;
+  margin: 10px;
+}
+.point_text{
+  width: 70%;
+}
