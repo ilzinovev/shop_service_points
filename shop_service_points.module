@@ -1,0 +1,102 @@
+<?php
+
+function shop_service_points_menu()
+{
+  $items['admin/shop_points'] = array(
+    'title' => 'Магазины розничные',
+    'page callback' => 'shop_service_points_shops_form',
+    'file' => 'shop_service_points.admin.inc',
+    'access arguments' => array('edit shop_service_points'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/service_points'] = array(
+    'title' => 'Сервис центры',
+    'page callback' => 'shop_service_points_form',
+    'file' => 'shop_service_points.admin.inc',
+    'access arguments' => array('edit shop_service_points'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/service_point/edit'] = array(
+    'page callback' => 'shop_service_points_edit_form',
+    'file' => 'shop_service_points.admin.inc',
+    'access arguments' => array('edit shop_service_points'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/service_point/save'] = array(
+    'page callback' => 'shop_service_points_edit_save',
+    'access arguments' => array('edit shop_service_points'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/service_point/delete'] = array(
+    'page callback' => 'shop_service_points_edit_delete',
+    'access arguments' => array('edit shop_service_points'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/service_xlsx/upload'] = array(
+    'page callback' => 'shop_service_points_upload_xlsx',
+    'file' => 'shop_service_points.admin.inc',
+    'access arguments' => array('edit shop_service_points'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function shop_service_points_permission() {
+  return array(
+    'edit shop_service_points' => array(
+      'title' => t('administer shop_service_points'),
+      'description' => t('Allows users to change shop_service_points'),
+    ),
+  );
+}
+
+function shop_service_points_get_all($type='shop'){
+  return db_select('service_points','s')
+    ->fields('s')
+    ->orderBy('city')
+    ->condition('type',$type)
+    ->execute()
+    ->fetchAll();
+}
+
+function shop_service_points_get($spid){
+  return (object) db_select('service_points','s')
+    ->fields('s')
+    ->condition('spid',$spid)
+    ->execute()
+    ->fetchAssoc();
+}
+
+function shop_service_points_edit_save(){
+  if(!empty($_POST['service_point'])){
+    $point=$_POST['service_point'];
+    foreach ($point as $key=> $property)
+      $fields[$key]=trim(htmlspecialchars($property));
+    if(!empty($fields['spid']))
+     db_update('service_points')
+      ->condition('spid',$fields['spid'])
+      ->fields($fields)
+      ->execute();
+    else {
+      unset($fields['spid']);
+      db_insert('service_points')
+        ->fields($fields)
+        ->execute();
+    }
+  }
+  drupal_goto('admin/'.$_POST['service_point']['type'].'_points');
+}
+
+function shop_service_points_edit_delete(){
+  if(!empty($_POST['service_point'])){
+    $point=$_POST['service_point'];
+    if($point=='all')
+      db_delete('service_points')
+        ->condition('type',$_POST['type'])
+        ->execute();
+    else
+      db_delete('service_points')
+        ->condition('spid',$point)
+        ->execute();
+  }
+}

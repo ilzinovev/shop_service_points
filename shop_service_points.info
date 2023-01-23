@@ -1,0 +1,11 @@
+name = Shop Service Points
+description = Shop Service Points edit
+core = 7.x
+
+
+
+package = Shop
+version = "7.x-1.0"
+core = "7.x"
+project = "shop_service_points"
+datestamp = "1318192304"

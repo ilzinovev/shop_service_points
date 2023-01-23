@@ -1,0 +1,52 @@
+<?php
+function shop_service_points_install() {}
+
+function shop_service_points_uninstall() {}
+
+function shop_service_points_schema(){
+  $schema=array();
+  $schema['service_points']=array(
+    'fields'=>array(
+      'spid'=>array(
+        'type' => 'serial',
+        'unsigned' => true,
+        'not null' => true,
+      ),
+      'city' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => null,
+      ),
+      'address' => array(
+        'type' => 'varchar',
+        'length' => 1024,
+        'default' => null,
+      ),
+      //Широта
+      'latitude' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'default' => null,
+       ),
+      //Долгота
+      'longitude' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'default' => null,
+       ),
+      'phone' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => null,
+      ),
+      'worktable' => array(
+        'type' => 'varchar',
+        'length' => 1024,
+        'default' => null,
+      ),
+
+    ),
+     'primary key' => array('spid'),
+  );
+  return $schema;
+}
